@@ -14,7 +14,8 @@ interface DataRow {
   country_code: string;
   region: string;
   score: number;
-  rank:number
+  rank:number;
+  difference: number;
 }
 
 const getIndicator = async (id: string): Promise<any> => {
@@ -40,13 +41,16 @@ const createData = async (countryCode: string, indicator: string, year: number):
       const country = item.country;
       const country_code = item.country_code;
       const region = item.region;
+      const previousYear = (year - 1);
       
       const indicatorDetails = item.indicators[indicator].find((entry: { year: number }) => entry.year === year);
-      console.log(indicatorDetails);
+      const indicatorDetails2 = item.indicators[indicator].find((entry: { previousYear: number }) => entry.previousYear === previousYear);
+      const difference = indicatorDetails - indicatorDetails2;
+      console.log("Indicator",difference);
       const score = indicatorDetails?.score || 0;
       const rank = indicatorDetails?.rank || 0;
   
-      return { country, country_code, region, score, rank };
+      return { country, country_code, region, score, rank, difference };
     } catch (error) {
       console.error('Error creating data:', error);
       throw error;
@@ -81,8 +85,12 @@ const Report = () => {
   }, [rows]);
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+    <TableContainer component={Paper}  sx={{
+        width: 800,
+        color: 'success.main',
+        margin: 'auto',
+      }} >
+      <Table sx={{ maxWidth: 800 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             {headers.map((header) => (
@@ -98,6 +106,7 @@ const Report = () => {
               <TableCell>{data.region}</TableCell>
               <TableCell>{data.score}</TableCell>
               <TableCell>{data.rank}</TableCell>
+              <TableCell>{data.difference}</TableCell>
             </TableRow>
           ))}
         </TableBody>
