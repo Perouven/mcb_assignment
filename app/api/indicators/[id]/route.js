@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 export async function PUT(request,{params}){
 
     const {id}= params;
+    
     const indicators=await request.json()
     console.log(indicators)
 
@@ -16,8 +17,10 @@ export async function PUT(request,{params}){
 
 export async function GET(request,{params}){
     const {id} =params;
+    console.log(id)
     await connectMongoDB();
     const indicators = await Indicators.findOne({country_code:id});
-
+    console.log("inside [id]")
     return NextResponse.json({indicators},{status:200})
 }
+

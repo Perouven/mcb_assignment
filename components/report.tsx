@@ -8,6 +8,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import FilterIndicators from './filter_indicators';
+import FilterCountry from './filter_country';
+
 
 interface DataRow {
   country: string;
@@ -85,12 +88,19 @@ const Report = () => {
   }, [rows]);
 
   return (
+  <div>
+
+    <FilterCountry/>
+    <FilterIndicators onClose={(indicators) => console.log(indicators)} open={true} />
+
+  
     <TableContainer component={Paper}  sx={{
         width: 800,
         color: 'success.main',
         margin: 'auto',
       }} >
       <Table sx={{ maxWidth: 800 }} size="small" aria-label="a dense table">
+      <caption>A basic table example with a caption</caption>
         <TableHead>
           <TableRow>
             {headers.map((header) => (
@@ -112,6 +122,8 @@ const Report = () => {
         </TableBody>
       </Table>
     </TableContainer>
+
+    </div>
   );
 };
 

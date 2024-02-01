@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import connectMongoDB from "../../../libs/mongoDB";
 import Indicators from '../../../models/indicators'
+import { useSearchParams } from "next/navigation";
 
 
 export async function POST(request){
@@ -14,6 +15,10 @@ export async function POST(request){
 export async function GET(){
     await connectMongoDB();
     const indicators =await Indicators.find()
+    console.log("inside GET")
 
     return NextResponse.json({indicators})
 }
+
+
+
