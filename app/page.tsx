@@ -7,7 +7,8 @@ import Tables from '../components/table';
 import { useState } from "react";
 
 interface ChosenIndicators {
-  [key: string]: boolean;
+  [indicatorKey: string]: number;
+  [countryKey: string]: boolean;
 }
 
 interface ChosenCountry {
@@ -17,10 +18,16 @@ interface ChosenCountry {
 export default function Home() {
   const [indicators, setIndicators] = useState<string[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
+  const [year, setYear] = useState<number>(2020);
+  
 
   const handleIndicators = (chosen_indicators: ChosenIndicators) => {
-    const indicators_applied = Object.keys(chosen_indicators).filter(k => chosen_indicators[k]);
+    console.log("In page", chosen_indicators)
+     const year1=chosen_indicators.year
+    const indicators_applied = Object.keys(chosen_indicators.indicators).filter(k => chosen_indicators.indicators[k]);
     setIndicators(indicators_applied);
+    setYear(year1)
+    
   }
 
   const handleCountry = (chosen_country: ChosenCountry) => {
@@ -33,7 +40,7 @@ export default function Home() {
       <h2>WDI report</h2>
       <FilterCountry onSave={(filteredCountries: ChosenCountry) => { handleCountry(filteredCountries) }} />
       <FilterIndicators onClose={(filteredIndicators: ChosenIndicators) => { handleIndicators(filteredIndicators) }} open={true} />
-      <Tables indicators={indicators} countries={countries} />
+      <Tables indicators={indicators} year={year} countries={countries} />
     </div>
   );
 }

@@ -41,14 +41,16 @@ export default function FilterIndicators(props: ConfirmationDialogRawProps) {
 
   const handleYearChange = (event: SelectChangeEvent<typeof year>) => {
     setYear(
-      // @ts-expect-error autofill of arbitrary value is not handled.
+      
       event.target.value,
     );
   };
   const handleApply = () => {
-    onClose(indicators);
+    const ChosenIndicators ={year,indicators}
+    
+    onClose(ChosenIndicators);
     setOpen(false);
-    console.log(Object.keys(indicators))
+
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
