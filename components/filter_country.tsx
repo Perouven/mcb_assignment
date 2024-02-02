@@ -1,19 +1,19 @@
-'use client'
-import * as React from 'react';
-import { useState } from 'react';
-import Box from '@mui/material/Box';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
 
-export default function FilterCountry() {
+export interface FilterCountryProps {
+  onSave: (countrySwitches: Record<string, boolean>) => void;
+}
+
+export default function FilterCountry({ onSave }: FilterCountryProps) {
   const [open, setOpen] = useState(false);
   const [countrySwitches, setCountrySwitches] = useState({
     Seychelles: false,
@@ -27,8 +27,6 @@ export default function FilterCountry() {
     Denmark: false,
     Finland: false,
   });
-  
-
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,7 +36,6 @@ export default function FilterCountry() {
     setOpen(false);
   };
 
-
   const handleSwitchChange = (country: keyof typeof countrySwitches) => {
     setCountrySwitches((prevSwitches) => ({
       ...prevSwitches,
@@ -47,9 +44,8 @@ export default function FilterCountry() {
   };
 
   const handleApply = () => {
-    // You can use countrySwitches state here for further actions
+    onSave(countrySwitches);
     handleClose();
-    console.log(countrySwitches)
   };
 
   return (
@@ -57,10 +53,7 @@ export default function FilterCountry() {
       <Button variant="outlined" onClick={handleClickOpen}>
         COUNTRY FILTER
       </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-      >
+      <Dialog fullWidth open={open} onClose={handleClose}>
         <DialogTitle>COUNTRY: </DialogTitle>
         <DialogContent>
           <DialogContentText>CHOOSE COUNTRY :</DialogContentText>

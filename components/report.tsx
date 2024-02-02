@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,20 +10,31 @@ import Paper from '@mui/material/Paper';
 import FilterIndicators from './filter_indicators';
 import FilterCountry from './filter_country';
 
+interface ReportProps {
+  filteredIndicators: string[];
+  filteredCountries: string[];
+}
 
 interface DataRow {
   country: string;
   country_code: string;
   region: string;
   score: number;
-  rank:number;
-  difference: number;
+  previous_score: number;
+  changes_in_score: number;
+  rank: number;
+  previous_rank: number;
+  changes_in_rank: number;
 }
 
-const getIndicator = async (id: string): Promise<any> => {
+const getIndicator = async (countries: string[], indicators: string[], year: number): Promise<any> => {
   try {
-    const response = await fetch(`http://localhost:3000/api/indicators/${id}`);
+    // Implement your logic to fetch data based on countries, indicators, and year
+    // Example: const response = await fetch(`http://localhost:3000/api/indicators?countries=${countries.join(',')}&indicators=${indicators.join(',')}&year=${year}`);
+    // Adjust the API endpoint based on your backend implementation
 
+    // Placeholder data for demonstration purposes
+    const response = await fetch(`http://localhost:3000/api/indicators/Denmark/cpi`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -37,46 +47,54 @@ const getIndicator = async (id: string): Promise<any> => {
   }
 };
 
-const createData = async (countryCode: string, indicator: string, year: number): Promise<DataRow> => {
-    try {
-      const result = await getIndicator(countryCode);
-      const item = result.indicators; // Assuming you are dealing with the first item in the array
-      const country = item.country;
-      const country_code = item.country_code;
-      const region = item.region;
-      const previousYear = (year - 1);
-      
-      const indicatorDetails = item.indicators[indicator].find((entry: { year: number }) => entry.year === year);
-      const indicatorDetails2 = item.indicators[indicator].find((entry: { previousYear: number }) => entry.previousYear === previousYear);
-      const difference = indicatorDetails - indicatorDetails2;
-      console.log("Indicator",difference);
-      const score = indicatorDetails?.score || 0;
-      const rank = indicatorDetails?.rank || 0;
-  
-      return { country, country_code, region, score, rank, difference };
-    } catch (error) {
-      console.error('Error creating data:', error);
-      throw error;
-    }
+const createData = (item: any): DataRow => {
+  const currentYear = 2020; // Replace with the actual current year
+  const previousYear = currentYear - 1;
+
+  const indicatorDetails = item.indicators.find((entry: { year: number }) => entry.year === currentYear);
+  const previousIndicatorDetails = item.indicators.find((entry: { year: number }) => entry.year === previousYear);
+
+  const changes_in_score = indicatorDetails?.score - previousIndicatorDetails?.score;
+  const changes_in_rank = indicatorDetails?.rank - previousIndicatorDetails?.rank;
+
+  return {
+    country: item.country,
+    country_code: item.country_code,
+    region: item.region,
+    score: indicatorDetails?.score || 0,
+    previous_score: previousIndicatorDetails?.score || 0,
+    changes_in_score: changes_in_score || 0,
+    rank: indicatorDetails?.rank || 0,
+    previous_rank: previousIndicatorDetails?.rank || 0,
+    changes_in_rank: changes_in_rank || 0,
   };
-  
+};
+
+const displayTable=(chosen_indicators:any)=>{
+    const indicators1 = Object.keys(chosen_indicators).filter(k=>chosen_indicators[k]);
     
 
-const Report = () => {
-  const fetchData = async () => {
-    const data = await createData("DNK", "cpi", 2020);
-    console.log(data);
-    return [data]; // Wrap the data in an array
-  };
+}
 
+const Report: React.FC<ReportProps> = ({ filteredIndicators, filteredCountries }) => {
   const [rows, setRows] = useState<DataRow[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
+  console.log(filteredCountries,filteredIndicators)
 
   useEffect(() => {
-    fetchData().then((data) => {
-      setRows(data);
-    });
-  }, []);
+    const fetchData = async () => {
+      try {
+        // const data = await getIndicator(filteredCountries, filteredIndicators, 2020);
+        // const processedData = createData(data); // Assuming you are dealing with the first item in the array
+        const processedData= [{country:"Denmark",country_code:"DEN",region:"WE/EU",score:88,previous_score: 70 ,changes_in_score:18 ,rank:1,previous_rank:3,changes_in_rank:2},{country:"Denmark",country_code:"DEN",region:"WE/EU",score:88,previous_score: 70 ,changes_in_score:18 ,rank:1,previous_rank:3,changes_in_rank:2}];
+        setRows(processedData); // Wrap the data in an array
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    
+    fetchData();
+  }, [filteredIndicators, filteredCountries]);
 
   useEffect(() => {
     // When rows change, update the headers based on the first row's keys
@@ -88,41 +106,38 @@ const Report = () => {
   }, [rows]);
 
   return (
-  <div>
+    <div>
+      <FilterCountry onSave={(filteredCountries) => console.log(filteredCountries)} />
+      <FilterIndicators onClose={(filteredIndicators) => {displayTable(filteredIndicators)}} open={true} />
 
-    <FilterCountry/>
-    <FilterIndicators onClose={(indicators) => console.log(indicators)} open={true} />
-
-  
-    <TableContainer component={Paper}  sx={{
-        width: 800,
-        color: 'success.main',
-        margin: 'auto',
-      }} >
-      <Table sx={{ maxWidth: 800 }} size="small" aria-label="a dense table">
-      <caption>A basic table example with a caption</caption>
-        <TableHead>
-          <TableRow>
-            {headers.map((header) => (
-              <TableCell key={header}>{header}</TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((data, index) => (
-            <TableRow key={index}>
-              <TableCell component="th" scope="row">{data.country}</TableCell>
-              <TableCell>{data.country_code}</TableCell>
-              <TableCell>{data.region}</TableCell>
-              <TableCell>{data.score}</TableCell>
-              <TableCell>{data.rank}</TableCell>
-              <TableCell>{data.difference}</TableCell>
+      <TableContainer component={Paper} sx={{ width: 1000, color: 'success.main', margin: 'auto' }}>
+        <Table sx={{ maxWidth: 1000 }} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              {headers.map((header) => (
+                <TableCell key={header}>{header}</TableCell>
+              ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
-
+          </TableHead>
+          <TableBody>
+            {rows.map((data, index) => (
+              <TableRow key={index}>
+                <TableCell component="th" scope="row">
+                  {data.country}
+                </TableCell>
+                <TableCell>{data.country_code}</TableCell>
+                <TableCell>{data.region}</TableCell>
+                <TableCell>{data.score}</TableCell>
+                <TableCell>{data.previous_score}</TableCell>
+                <TableCell>{data.changes_in_score}</TableCell>
+                <TableCell>{data.rank}</TableCell>
+                <TableCell>{data.previous_rank}</TableCell>
+                <TableCell>{data.changes_in_rank}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };
