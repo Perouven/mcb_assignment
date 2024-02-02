@@ -3,13 +3,17 @@ import * as React from 'react';
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export interface ConfirmationDialogRawProps {
   
@@ -20,6 +24,7 @@ export interface ConfirmationDialogRawProps {
 export default function FilterIndicators(props: ConfirmationDialogRawProps) {
   const { onClose,  ...other } = props;
   const [open, setOpen] = useState(false);
+  const [year, setYear] = React.useState<DialogProps['year']>(2020);
   const [indicators, setIndicators] = useState({
     "fisheries_production": false,
     "agricultural_land": false,
@@ -34,10 +39,16 @@ export default function FilterIndicators(props: ConfirmationDialogRawProps) {
     setOpen(true);
   };
 
+  const handleYearChange = (event: SelectChangeEvent<typeof year>) => {
+    setYear(
+      // @ts-expect-error autofill of arbitrary value is not handled.
+      event.target.value,
+    );
+  };
   const handleApply = () => {
     onClose(indicators);
     setOpen(false);
-    console.log(indicators)
+    console.log(Object.keys(indicators))
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +70,7 @@ export default function FilterIndicators(props: ConfirmationDialogRawProps) {
         <DialogTitle>Indicators</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Select the indicators:
+            Select the indicators & years:
           </DialogContentText>
           <Box
             noValidate
@@ -71,6 +82,26 @@ export default function FilterIndicators(props: ConfirmationDialogRawProps) {
               width: 'fit-content',
             }}
           >
+              <FormControl sx={{ mt: 2, minWidth: 120 }}>
+              <InputLabel htmlFor="max-width">Year</InputLabel>
+              <Select
+                autoFocus
+                value={year}
+                onChange={handleYearChange}
+                label="year"
+                inputProps={{
+                  name: 'year',
+                  id: 'year',
+                }}
+              >
+                <MenuItem value={false as any}>false</MenuItem>
+                <MenuItem value="2020">2020</MenuItem>
+                <MenuItem value="2019">2019</MenuItem>
+                <MenuItem value="2018">2018</MenuItem>
+                <MenuItem value="2017">2017</MenuItem>
+                <MenuItem value="2016">2016</MenuItem>
+              </Select>
+            </FormControl>
             {Object.entries(indicators).map(([key, value]) => (
               <FormControlLabel
                 key={key}

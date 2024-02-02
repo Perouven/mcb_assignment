@@ -107,8 +107,6 @@ const Report: React.FC<ReportProps> = ({ filteredIndicators, filteredCountries }
 
   return (
     <div>
-      <FilterCountry onSave={(filteredCountries) => console.log(filteredCountries)} />
-      <FilterIndicators onClose={(filteredIndicators) => {displayTable(filteredIndicators)}} open={true} />
 
       <TableContainer component={Paper} sx={{ width: 1000, color: 'success.main', margin: 'auto' }}>
         <Table sx={{ maxWidth: 1000 }} size="small" aria-label="a dense table">

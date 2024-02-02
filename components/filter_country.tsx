@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -14,11 +15,11 @@ export interface FilterCountryProps {
 }
 
 export default function FilterCountry({ onSave }: FilterCountryProps) {
-  const [open, setOpen] = useState(false);
-  const [countrySwitches, setCountrySwitches] = useState({
+const [open, setOpen] = useState(false);
+const [countrySwitches, setCountrySwitches] = useState({
     Seychelles: false,
     Maldives: false,
-    "Côte d'Ivoire": false,
+    "Cote d'Ivoire": false,
     Kenya: false,
     "Sri Lanka": false,
     India: false,
@@ -26,58 +27,58 @@ export default function FilterCountry({ onSave }: FilterCountryProps) {
     Australia: false,
     Denmark: false,
     Finland: false,
-  });
+});
 
-  const handleClickOpen = () => {
+const handleClickOpen = () => {
     setOpen(true);
-  };
+};
 
-  const handleClose = () => {
+const handleClose = () => {
     setOpen(false);
-  };
+};
 
-  const handleSwitchChange = (country: keyof typeof countrySwitches) => {
+const handleSwitchChange = (country: keyof typeof countrySwitches) => {
     setCountrySwitches((prevSwitches) => ({
-      ...prevSwitches,
-      [country]: !prevSwitches[country],
+    ...prevSwitches,
+    [country]: !prevSwitches[country],
     }));
-  };
+};
 
-  const handleApply = () => {
+const handleApply = () => {
     onSave(countrySwitches);
     handleClose();
-  };
+};
 
-  return (
+return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
+    <Button variant="outlined" onClick={handleClickOpen}>
         COUNTRY FILTER
-      </Button>
-      <Dialog fullWidth open={open} onClose={handleClose}>
+    </Button>
+    <Dialog fullWidth open={open} onClose={handleClose}>
         <DialogTitle>COUNTRY: </DialogTitle>
         <DialogContent>
-          <DialogContentText>CHOOSE COUNTRY :</DialogContentText>
-          <FormGroup>
+        <DialogContentText>CHOOSE COUNTRY :</DialogContentText>
+        <FormGroup>
             {Object.entries(countrySwitches).map(([country, checked]) => (
-              <FormControlLabel
+            <FormControlLabel
                 key={country}
                 control={
-                  <Switch
+                <Switch
                     checked={checked}
                     onChange={() => handleSwitchChange(country)}
-                  />
+            />
                 }
                 label={country}
-              />
+        />
             ))}
-          </FormGroup>
+    </FormGroup>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleApply}>
+            <Button autoFocus onClick={handleApply}>
             APPLY
-          </Button>
+            </Button>
         </DialogActions>
-      </Dialog>
+    </Dialog>
     </React.Fragment>
-  );
+);
 }
