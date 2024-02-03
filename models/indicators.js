@@ -11,22 +11,22 @@ const indicatorsSchema =new Schema(
           {"year": Number, "score": Number, "rank": Number},
         ],
         "fisheries_production": [
-          {"year": String, "metric_tons": Number},
+          {"year": Number, "metric_tons": Number},
         ],
         "agricultural_land": [
-          {"year": String, "sq_km": Number},
+          {"year": Number, "sq_km": Number},
         ],
         "time_to_start_business": [
-          {"year": String, "days": Number},          // ... othe
+          {"year": Number, "days": Number},          // ... othe
         ],
         "new business registered": [
-            {"year": String, "number": Number},          // ... othe
+            {"year": Number, "number": Number},          // ... othe
           ],
           "employment in agriculture": [
-            {"year": String, "percentage": Number},          // ... othe
+            {"year": Number, "percentage": Number},          // ... othe
           ],
           "self employed": [
-            {"year": String, "percentage": Number},          // ... othe
+            {"year": Number, "percentage": Number},          // ... othe
           ],
    } });
 

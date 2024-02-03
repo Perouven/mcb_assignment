@@ -23,7 +23,7 @@ export interface ConfirmationDialogRawProps {
 
 export default function FilterIndicators(props: ConfirmationDialogRawProps) {
   const { onClose,  ...other } = props;
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [year, setYear] = React.useState<DialogProps['year']>(2020);
   const [indicators, setIndicators] = useState({
     "fisheries_production": false,

@@ -15,7 +15,7 @@ export interface FilterCountryProps {
 }
 
 export default function FilterCountry({ onSave }: FilterCountryProps) {
-const [open, setOpen] = useState(false);
+const [open, setOpen] = useState(true);
 const [countrySwitches, setCountrySwitches] = useState({
     Seychelles: false,
     Maldives: false,
