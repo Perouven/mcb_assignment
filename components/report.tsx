@@ -11,8 +11,7 @@ import FilterIndicators from './filter_indicators';
 import FilterCountry from './filter_country';
 
 interface ReportProps {
-  filteredIndicators: string[];
-  filteredCountries: string[];
+  reportArray: []
 }
 
 interface DataRow {
@@ -76,17 +75,17 @@ const displayTable=(chosen_indicators:any)=>{
 
 }
 
-const Report: React.FC<ReportProps> = ({ filteredIndicators, filteredCountries }) => {
+const Report: React.FC<ReportProps> = ({reportArray}) => {
   const [rows, setRows] = useState<DataRow[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
-  console.log(filteredCountries,filteredIndicators)
+  console.log("inside report",reportArray)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // const data = await getIndicator(filteredCountries, filteredIndicators, 2020);
         // const processedData = createData(data); // Assuming you are dealing with the first item in the array
-        const processedData= [{country:"Denmark",country_code:"DEN",region:"WE/EU",score:88,previous_score: 70 ,changes_in_score:18 ,rank:1,previous_rank:3,changes_in_rank:2},{country:"Denmark",country_code:"DEN",region:"WE/EU",score:88,previous_score: 70 ,changes_in_score:18 ,rank:1,previous_rank:3,changes_in_rank:2}];
+        const processedData=  reportArray || [];
         setRows(processedData); // Wrap the data in an array
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -94,7 +93,7 @@ const Report: React.FC<ReportProps> = ({ filteredIndicators, filteredCountries }
     };
     
     fetchData();
-  }, [filteredIndicators, filteredCountries]);
+  }, [reportArray]);
 
   useEffect(() => {
     // When rows change, update the headers based on the first row's keys
