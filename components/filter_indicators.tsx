@@ -72,7 +72,7 @@ export default function FilterIndicators(props: ConfirmationDialogRawProps) {
         <DialogTitle>Indicators</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Select the indicators & years:
+            Select the year & indicators:
           </DialogContentText>
           <Box
             noValidate

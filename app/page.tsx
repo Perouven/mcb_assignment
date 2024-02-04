@@ -44,13 +44,15 @@ export default function Home({
 
   return (
     <div >
-      <h2>WDI report</h2>
+      <h2 className={styles.mainTitle}>WORLD DEVELOPMENT INDICATORS - REPORT</h2>
       <div className={styles.filterButtons}>
           <FilterCountry onSave={(filteredCountries: ChosenCountry) => { handleCountry(filteredCountries) }} />
           <FilterIndicators onClose={(filteredIndicators: ChosenIndicators) => { handleIndicators(filteredIndicators) }} open={true} />
 
       </div>
+      <div className={styles.Tables}>
       <Tables indicators={indicators} year={year} countries={countries} />
+      </div>
     </div>
   );
 }
