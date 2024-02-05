@@ -1,4 +1,7 @@
 Node.js Application Architecture:
+
+
+
 Filter Inputs:
 
 Countries and Indicators: Users can specify one or more countries and select specific indicators for analysis.
