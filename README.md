@@ -1,4 +1,4 @@
-Node.js Application Architecture:
+Next.js Application Architecture:
 
 
 
