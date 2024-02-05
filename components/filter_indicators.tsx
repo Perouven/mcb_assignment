@@ -38,6 +38,9 @@ export default function FilterIndicators(props: ConfirmationDialogRawProps) {
   const handleClickOpen = () => {
     setOpen(true);
   };
+  const handleClose = () => {
+    setOpen(false);
+};
 
   const handleYearChange = (event: SelectChangeEvent<typeof year>) => {
     setYear(
@@ -67,7 +70,7 @@ export default function FilterIndicators(props: ConfirmationDialogRawProps) {
       </Button>
       <Dialog
         open={open}
-        onClose={handleApply}
+        onClose={handleClose}
       >
         <DialogTitle>Indicators</DialogTitle>
         <DialogContent>

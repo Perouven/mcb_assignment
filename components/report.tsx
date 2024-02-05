@@ -15,6 +15,7 @@ interface ReportProps {
 }
 
 interface DataRow {
+  indicator: null;
   country: string;
   country_code: string;
   region: string;
@@ -74,29 +75,25 @@ const displayTable=(chosen_indicators:any)=>{
     
 
 }
-
-const Report: React.FC<ReportProps> = ({reportArray}) => {
+const Report: React.FC<ReportProps> = ({ reportArray }) => {
   const [rows, setRows] = useState<DataRow[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
-  console.log("inside report",reportArray)
+  console.log("inside report", reportArray);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const data = await getIndicator(filteredCountries, filteredIndicators, 2020);
-        // const processedData = createData(data); // Assuming you are dealing with the first item in the array
-        const processedData=  reportArray || [];
-        setRows(processedData); // Wrap the data in an array
+        const processedData = reportArray?.flat() || [];
+        setRows(processedData);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error processing data:', error);
       }
     };
-    
+
     fetchData();
   }, [reportArray]);
 
   useEffect(() => {
-    // When rows change, update the headers based on the first row's keys
     if (rows.length > 0) {
       const firstRow = rows[0];
       const rowHeaders = Object.keys(firstRow);
@@ -104,39 +101,70 @@ const Report: React.FC<ReportProps> = ({reportArray}) => {
     }
   }, [rows]);
 
-  return (
-    <div>
-
-      <TableContainer component={Paper} sx={{ width: 1000, color: 'success.main', margin: 'auto' }}>
-        <Table sx={{ maxWidth: 1000 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              {headers.map((header) => (
-                <TableCell key={header}>{header}</TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((data, index) => (
-              <TableRow key={index}>
-                <TableCell component="th" scope="row">
-                  {data.country}
-                </TableCell>
-                <TableCell>{data.country_code}</TableCell>
-                <TableCell>{data.region}</TableCell>
-                <TableCell>{data.score}</TableCell>
-                <TableCell>{data.previous_score}</TableCell>
-                <TableCell>{data.changes_in_score}</TableCell>
-                <TableCell>{data.rank}</TableCell>
-                <TableCell>{data.previous_rank}</TableCell>
-                <TableCell>{data.changes_in_rank}</TableCell>
+  const renderTable = () => {
+    if (rows.length > 0 && rows[0].indicator!==null) {
+      // Render the table for 'use client' indicator
+      return (
+        <TableContainer component={Paper} sx={{ width: 1000, color: 'success.main', margin: 'auto' }}>
+          {/* Add your custom table content here for 'use client' */}
+          <Table sx={{ maxWidth: 1000 }} size="small" aria-label="a dense table">
+            <TableHead>
+               <TableRow>
+                {headers.map((header) => (
+                  <TableCell key={header}>{header}</TableCell>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
-  );
+            </TableHead>
+            <TableBody>
+              {rows.map((data, index) => (
+                // Add your custom table row content here for 'use client'
+                <TableRow key={index}>
+                  <TableCell>{data.country}</TableCell>
+                  {/* Add other cells as needed */}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
+    } else {
+      // Render the regular table
+      return (
+        <TableContainer component={Paper} sx={{ width: 1000, color: 'success.main', margin: 'auto' }}>
+          <Table sx={{ maxWidth: 1000 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                {headers.map((header) => (
+                  <TableCell key={header}>{header}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((data, index) => (
+                <TableRow key={index}>
+                  <TableCell component="th" scope="row">
+                    {data.country}
+                  </TableCell>
+                  <TableCell>{data.country_code}</TableCell>
+                  <TableCell>{data.region}</TableCell>
+                  <TableCell>{data.score}</TableCell>
+                  <TableCell>{data.previous_score}</TableCell>
+                  <TableCell>{data.changes_in_score}</TableCell>
+                  <TableCell>{data.rank}</TableCell>
+                  <TableCell>{data.previous_rank}</TableCell>
+                  <TableCell>{data.changes_in_rank}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      );
+    }
+  };
+
+  return <div>{renderTable()}</div>;
 };
+
+
 
 export default Report;
