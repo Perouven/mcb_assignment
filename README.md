@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Node.js Application Architecture:
+Filter Inputs:
 
-## Getting Started
+Countries and Indicators: Users can specify one or more countries and select specific indicators for analysis.
+Year: The analysis is performed for a particular year.
+Data Retrieval:
 
-First, run the development server:
+Corruption Perception Index (CPI):
+If the selected indicator is CPI, the application fetches data from a JSON file. This JSON file is a cleaned-up version of Excel data provided for this specific indicator.
+Other Indicators:
+For indicators other than CPI, the application fetches data from the World Bank API. This ensures a dynamic and updated dataset for a wide range of indicators.
+Data Insertion:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+MongoDB Database:
+The retrieved data, whether from the JSON file or the World Bank API, is then inserted into a MongoDB database.
+The insertion into the database is conditional – data is inserted only if it is not already present. This ensures data integrity and avoids duplications.
+Key Features:
+Dynamic Data Sources:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+By using both a static JSON file and a dynamic World Bank API, the application accommodates the different natures of data for CPI and other indicators.
+MongoDB Integration:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Utilizing MongoDB as the database enables efficient storage and retrieval of data.
+The application checks for existing data before inserting, preventing unnecessary duplication.
+Filter Flexibility:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Users can customize the analysis by selecting specific countries, indicators, and a target year. This flexibility enhances the application's usability.
+Automated Data Fetching:
 
-## Learn More
+The application automates the process of fetching data from the World Bank API and the JSON file, ensuring that the dataset is always up-to-date.
+Efficiency in Reporting:
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The implemented solution addresses the challenge highlighted in the context, enabling faster reactions to changing economic conditions through an automated and efficient reporting process.
